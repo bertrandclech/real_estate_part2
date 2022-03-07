@@ -68,6 +68,18 @@ abstract class FormConstraints
         return $value !== null ? htmlspecialchars($value) : null;
     }
 
+    /**
+     * Email
+     */
+    static public function email($value): ?string
+    {
+        if ($value) {
+            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                $value = null;
+            }
+        }
+        return $value !== null ? htmlspecialchars($value) : null;
+    }
 
     /**
      * Verify password
@@ -91,19 +103,5 @@ abstract class FormConstraints
             $value = password_hash($value, PASSWORD_BCRYPT, $optionsHash);
         }
         return $value;
-    }
-
-
-    /**
-     * Email
-     */
-    static public function email($value): ?string
-    {
-        if ($value) {
-            if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
-                $value = null;
-            }
-        }
-        return $value !== null ? htmlspecialchars($value) : null;
     }
 }

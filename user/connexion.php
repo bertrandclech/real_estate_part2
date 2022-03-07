@@ -1,20 +1,66 @@
 <?php
 
 // Autoload
+require_once 'autoload.php';
 
+// Instance User Manager
+$userManager = new UserManager();
+
+// Build form
+$formBuilder = new FormBuilder($_POST, ['email', 'password']);
+// Form validator
+$formValidator = new FormValidator(
+    $formBuilder,
+    [
+        'email' => FormConstraints::string(@$formBuilder->method['email']),
+        'password' => FormConstraints::string(@$formBuilder->method['password']),
+    ]
+);
+
+// IF Form is submit
+if ($formValidator->isSubmit()) {
+    if ($formValidator->isValide()) {
+        // Verify if email is ok
+        if ($auth = $userManager->connectUser(htmlspecialchars($formBuilder->method['email']))) {
+            // Verify password
+            if (password_verify($formBuilder->method['password'], $auth['password'])) {
+
+                // Build a session Auth
+                $_SESSION['auth'] =
+                    [
+                        'role' => $auth['role'],
+                        'prenom' => $auth['nickname'],
+                        'email' => $auth['mail'],
+                        'date' => $auth['created_at']
+                    ];
+
+                header('Location: profil.php');
+                exit();
+            } else {
+                $_SESSION['message'] = ['Informations invalides.'];
+            }
+        } else {
+            $_SESSION['message'] = ['Informations invalides.'];
+        }
+    } else {
+        // Return errors
+        $_SESSION['message'] = $formValidator->errors;
+    }
+}
+
+// render HTML
 $title = "Connexion";       # Title
 $navbar = "navbar_user";    # Nav bar
 // Header
 require_once '../templates/header.php'; ?>
 
-
 <h1>Connexion</h1>
 
 <div>
-    <form action="" method="POST">
+    <form method="POST">
         <div>
-            <label for="user_email">Email*</label>
-            <input type="text" name="user_email" id="user_email" placeholder="Adresse Email" />
+            <label for="email">Email*</label>
+            <input type="text" name="email" id="email" placeholder="Adresse Email" />
         </div>
         <div>
             <label for="password">Mot de passe*</label>
@@ -23,7 +69,9 @@ require_once '../templates/header.php'; ?>
         <div>
             <button class="btn btn-primary btn-sm" type="submit">Connexion</button>
         </div>
-        <a style="float:right;" class="btn btn-success btn-sm" href="./inscription.php">Inscription ></a>
+        <div>
+            <a style="float:right;" class="btn btn-success btn-sm" href="./inscription.php">Inscription ></a>
+        </div>
     </form>
 </div>
 

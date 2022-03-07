@@ -44,4 +44,19 @@ class UserManager extends DataBase
 
         return $verifyEmail->rowCount();
     }
+
+    /**
+     * Connect user
+     */
+    public function connectUser(string $email)
+    {
+        $connectUser = $this->getPDO()->prepare(
+            "SELECT * FROM {$this->user} 
+                    WHERE mail = :email"
+        );
+        $connectUser->bindValue(":email", $email, PDO::PARAM_STR);
+        $connectUser->execute();
+
+        return $connectUser->fetch();
+    }
 }

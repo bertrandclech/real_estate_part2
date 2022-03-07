@@ -11,7 +11,7 @@
             <?php if (!isset($_SESSION['auth'])) : ?>
                 <li class="m-1"><a href="./user/connexion.php" class="btn btn-primary btn-sm">Se connecter</a></li>
             <?php else : ?>
-                <li class="m-1"><a href="./user/deconnexion.php" class="btn btn-warning">Se deconnecter</a></li>
+                <li class="m-1"><a href="./user/profil.php" class="btn btn-success">Profil</a></li>
             <?php endif; ?>
         </ul>
     </div>

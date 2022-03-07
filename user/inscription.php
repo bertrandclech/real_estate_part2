@@ -22,7 +22,6 @@ $formValidator = new FormValidator(
 // Submit form
 if ($formValidator->isSubmit()) {
     if ($formValidator->isValide()) {
-
         // Check if email exist
         if ($userManager->verifyEmailExist($formBuilder->method['email']) === 0) {
 

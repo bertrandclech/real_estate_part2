@@ -12,7 +12,16 @@ class Authentification
     public function __construct()
     {
         if (session_status() === PHP_SESSION_NONE) {
-            session_status();
+            session_start();
+        }
+    }
+
+    public function isAuth() : bool
+    {
+        if (isset($_SESSION['auth'])) {
+            return true;
+        } else {
+            return false;
         }
     }
 }
