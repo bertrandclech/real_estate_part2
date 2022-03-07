@@ -87,7 +87,10 @@ abstract class FormConstraints
     static public function passHash(mixed $value): string
     {
         $optionsHash = ['cost' => 12];
-        return password_hash($value, PASSWORD_BCRYPT, $optionsHash);
+        if ($value) {
+            $value = password_hash($value, PASSWORD_BCRYPT, $optionsHash);
+        }
+        return $value;
     }
 
 

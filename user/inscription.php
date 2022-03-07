@@ -15,7 +15,7 @@ $formValidator = new FormValidator(
     [
         'nickname' => FormConstraints::length(@$formBuilder->method['nickname'], 3, 30),
         'email' => FormConstraints::email(@$formBuilder->method['email']),
-        'password' => FormConstraints::passCheck(@$formBuilder->method['password'], @$formBuilder->method['repeat_password']),
+        'check_password' => FormConstraints::passCheck(@$formBuilder->method['password'], @$formBuilder->method['repeat_password']),
     ]
 );
 
@@ -23,20 +23,26 @@ $formValidator = new FormValidator(
 if ($formValidator->isSubmit()) {
     if ($formValidator->isValide()) {
 
-        # more logic here...
-        $userEntity = new UserEntity(
-            [
-                'nickname' => htmlspecialchars($formBuilder->method['nickname']),
-                'email' => htmlspecialchars($formBuilder->method['email']),
-                'password' => htmlspecialchars($formBuilder->method['password']),
-            ]
-        );
+        // Check if email exist
+        if ($userManager->verifyEmailExist($formBuilder->method['email']) === 0) {
 
-        // Insert user in database
-        if ($userManager->addUser($userEntity)) {
-            $_SESSION['message'] = ["Success enregistrement."];
-        } else {
-            $_SESSION['message'] = ["Erreur pendant l'enregistrement."];
+            // Entity User
+            $userEntity = new UserEntity(
+                [
+                    'nickname' => htmlspecialchars($formBuilder->method['nickname']),
+                    'email' => htmlspecialchars($formBuilder->method['email']),
+                    // Hash password
+                    'password' => htmlspecialchars(FormConstraints::passHash($formBuilder->method['password'])),
+                ]
+            );
+            // Insert user in database
+            if ($userManager->addUser($userEntity)) {
+                $_SESSION['message'] = ["Success enregistrement."];
+            } else {
+                $_SESSION['message'] = ["Erreur pendant l'enregistrement."];
+            }
+        }else{
+            $_SESSION['message'] = ["Email déjà existante."];
         }
     } else {
         $_SESSION['message'] = $formValidator->errors;
