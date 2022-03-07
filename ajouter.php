@@ -2,6 +2,16 @@
 
 require_once './src/autoload.php';			# Autoload
 
+// Verify session
+if (!Authentification::isAuth()) {
+	// Automatique redirect last page visited
+	$_SESSION['redirect'] = $_SERVER['REQUEST_URI'];
+
+	// Message
+	Utilis::flash("message", ["Vous devez être connecté."]);
+	Utilis::redirect("./user/connexion.php");
+}
+
 // Manager Advert
 $adManager = new AdvertManager();
 
@@ -23,7 +33,7 @@ $formValidator = new FormValidator(
 
 if ($formValidator->isSubmit()) {
 	if ($formValidator->isValide()) {
-		
+
 		// If Form is valide insert datas in entity
 		$advertEntity = new AdvertEntity(
 			[
@@ -37,15 +47,15 @@ if ($formValidator->isSubmit()) {
 		);
 		// Add advert (INSERT INTO DB)
 		$adManager->addAdvert($advertEntity);
-		$_SESSION['message'] = ["Informations enregistrées."];
+		Utilis::flash("message", ["Informations enregistrées."]);
 	} else {
 		# Errors...
-		$_SESSION['message'] = $formValidator->errors;
+		Utilis::flash("message", $formValidator->errors);
 	}
 }
 
 // Ttile
-$title = "Ajouter une annonce";	
+$title = "Ajouter une annonce";
 // Navbar
 $navbar = "navbar";
 // Header
@@ -76,7 +86,7 @@ require_once './templates/header.php'; ?>
 			<label>Ville</label>
 			<input type="text" class="form-control" name="city">
 		</div>
-		
+
 		<div class="form-group">
 			<label>Type</label>
 			<select name="category" class="custom-select">

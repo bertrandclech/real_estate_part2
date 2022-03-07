@@ -3,6 +3,12 @@
 // Autoload
 require_once './src/autoload.php';
 
+// If not auth
+if(!Authentification::isAuth()){
+	Utilis::flash("message", ["Vous devez être connectée."]);
+	Utilis::redirect("./user/connexion.php");
+}
+
 # Instance of advertMananger
 $adManager = new AdvertManager();
 

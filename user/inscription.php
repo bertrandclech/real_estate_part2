@@ -3,6 +3,11 @@
 // Autoload
 require_once 'autoload.php';
 
+// Authentification
+if (Authentification::isAuth()) {
+    Utilis::redirect("profil.php");
+}
+
 // User Manager
 $userManager = new UserManager();
 
@@ -40,7 +45,7 @@ if ($formValidator->isSubmit()) {
             } else {
                 $_SESSION['message'] = ["Erreur pendant l'enregistrement."];
             }
-        }else{
+        } else {
             $_SESSION['message'] = ["Email déjà existante."];
         }
     } else {
