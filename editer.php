@@ -68,7 +68,7 @@ if ($formValidator->isSubmit()) {
 				$nom_photo = uploadImage($_FILES['picture'], $_GET['id'], $extension);
 
 				// set de l'image
-				$ad->SetPicture(htmlspecialchars($nom_photo));
+				$ad->setPicture(htmlspecialchars($nom_photo));
 
 						// Update Advert into database
 				if ($adManager->updateAdvertById(intval($_GET['id']), $ad, $nom_photo) > 0) {
@@ -155,8 +155,8 @@ require_once './templates/header.php';
 
 		<div class="form-group">
 			<label>Photo</label>
+			<img src="uploads/<?php echo $advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid">
 			<div class="custom-file">
-				<img src="uploads/<?php echo $advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid">
 				<input type="hidden" name="old_picture" value="<?php echo $advert['picture']; ?>">	
 				<input type="file" class="custom-file-input" name="picture">
 				<label class="custom-file-label">Choisir une photo</label>

@@ -51,7 +51,7 @@ if ($formValidator->isSubmit()) {
 			]
 		);
 		// Add advert (INSERT INTO DB)
-		$adManager->addAdvert($advertEntity);
+		//$adManager->addAdvert($ad);
 		Utilis::flash("message", ["Informations enregistrées."]);
 		$lastId = $adManager->addAdvert($ad);
 
