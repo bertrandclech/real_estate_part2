@@ -191,6 +191,8 @@ class AdvertManager extends DataBase
         $delete_advert->execute();
         $delete_advert->closeCursor();
 
+        unlink('uploads/'. $this->advert->getPictuure(['image']));
+
         return $delete_advert->rowCount();
     }
 

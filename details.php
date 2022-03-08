@@ -41,6 +41,7 @@ require_once './templates/header.php';
         <table class="table table-striped">
             <thead>
                 <tr>
+                    <th>Photo</th>
                     <th>Titre</th>
                     <th>Description</th>
                     <th>Code postal</th>
@@ -52,6 +53,7 @@ require_once './templates/header.php';
             </thead>
             <tbody>
                 <tr>
+                    <td><img src="uploads/<?php echo $advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid"></td>
                     <td><?= $advert['title']; ?></td>
                     <td><?= $advert['description'];  ?></td>
                     <td><?= $advert['postcode']; ?></td>
