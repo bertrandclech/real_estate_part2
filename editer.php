@@ -65,16 +65,16 @@ if ($formValidator->isSubmit()) {
 						'picture' => htmlspecialchars($nom_photo)
 					]
 				);
-						// Update Advert into database
+				// Update Advert into database
 				if ($adManager->updateAdvertById(intval($_GET['id']), $ad, $nom_photo) > 0) {
-					$_SESSION['message'] = ["Annonce modifié avec success."];
+					Utilis::flash('message', ["Annonce modifié avec success."]);
 				} else {
-					$_SESSION['message'] = ["L'annonce a pas été modifié."];
+					Utilis::flash('message', ["L'annonce a pas été modifié."]);
 				}
+
 				header('Location: editer.php?id=' . (int) $_GET['id'] . '');
 				exit();
-			}
-			else {
+			} else {
 				$_SESSION['messsage'] =	 '<div class="alert alert-danger" role="alert">Image invalide !</div>';
 			}
 		}
@@ -136,12 +136,12 @@ require_once './templates/header.php';
 					<div class="input-group-text">€</div>
 				</div>
 			</div>
-		</div>	
+		</div>
 
 		<div class="form-group">
 			<label>Photo</label>
 			<div class="custom-file">
-				<input type="hidden" name="old_picture" value="<?php echo $advert['picture']; ?>">	
+				<input type="hidden" name="old_picture" value="<?php echo $advert['picture']; ?>">
 				<input type="file" class="custom-file-input" name="picture">
 				<label class="custom-file-label">Choisir une photo</label>
 			</div>
