@@ -17,8 +17,15 @@ $advertManager = new AdvertManager();
 // Suppression d'une annonce
 // Vérifie si un id est envoyé et si une variable $type est bien envoyée
 if (!empty($_GET['id']) && !empty($_GET['type']) && $_GET['type'] === 'supprimer') {
+
     // Suppression d'une annonce en BDD
-    $advertManager->deleteAdvertById($_GET['id']);
+    $ad = new AdvertEntity($advertManager->getAdvertById($_GET['id']));
+    
+    if ($advertManager->deleteAdvert($ad)) {
+        if (file_exists('uploads/ad_' . htmlspecialchars($_GET['id']))) {
+            unlink('uploads/ad_' . htmlspecialchars($_GET['id']));
+        }
+    }
 }
 
 // Récupération de toutes les annonces
@@ -55,7 +62,7 @@ require_once './templates/header.php';
 
             <?php foreach ($allAdvers as $advert) : ?>
                 <tr>
-                    <td><img src="uploads/<?php echo $advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid"></td> 
+                    <td><img src="uploads/<?php echo $advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid"></td>
                     <td><?= mb_strtoupper($advert['title']); ?></td>
                     <td><?= ucfirst(substr($advert['description'], 0, 10) . "..."); ?></td>
                     <td><?= $advert['postcode']; ?></td>

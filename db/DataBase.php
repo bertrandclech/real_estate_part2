@@ -9,7 +9,7 @@ abstract class DataBase
     private string $db_host = 'localhost';
     private string $db_name = 'real_estate';
 
-    private PDO $db;
+    protected PDO $db;
 
     /**
      * Connect PDO
