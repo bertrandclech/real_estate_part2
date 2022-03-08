@@ -23,7 +23,7 @@ class AdvertManager extends DataBase
     public function addAdvert(AdvertEntity $advertEntity): int
     {
      //   $bdd = $this->getPDO();
-        $addAdvert = $bdd->prepare(
+        $addAdvert = $this->db->prepare(
             "INSERT INTO {$this->advert} (title, description, postcode, city, price, picture, category_id)
                 VALUE(:title, :description, :postcode, :city, :price, :picture, :category_id)"
         );
