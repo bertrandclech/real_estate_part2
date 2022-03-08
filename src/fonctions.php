@@ -125,14 +125,14 @@
 	function uploadImage($file, $id, $extension)
 	{
 		// Formatte le nom de l'image de façon a commencer par logement
-		$slug = 'logement';
+		$slug = 'ad';
 
 		// Formatte le nouveau nom
 		// mon-titre-magazine_12.png
 		$nouveau_nom = $slug . '_' . $id . '.' . $extension;
 
 		// Upload l'image avec le nouveau nom
-		move_uploaded_file($file['tmp_name'], 'images/' . $nouveau_nom);
+		move_uploaded_file($file['tmp_name'], 'uploads/' . $nouveau_nom);
 
 		return $nouveau_nom;
 	}

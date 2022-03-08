@@ -22,9 +22,10 @@ class AdvertManager extends DataBase
      */
     public function addAdvert(AdvertEntity $advertEntity): int
     {
-        $addAdvert = $this->getPDO()->prepare(
-            "INSERT INTO {$this->advert} (title, description, postcode, city, price, category_id)
-                VALUE(:title, :description, :postcode, :city, :price, :category_id)"
+        $bdd = $this->getPDO();
+        $addAdvert = $bdd->prepare(
+            "INSERT INTO {$this->advert} (title, description, postcode, city, price, picture, category_id)
+                VALUE(:title, :description, :postcode, :city, :price, :picture, :category_id)"
         );
         $addAdvert->bindValue(':title', $advertEntity->getTitle(), PDO::PARAM_STR);
         $addAdvert->bindValue(':description', $advertEntity->getDescription(), PDO::PARAM_STR);
@@ -32,11 +33,12 @@ class AdvertManager extends DataBase
         $addAdvert->bindValue(':city', $advertEntity->getCity(), PDO::PARAM_STR);
         $addAdvert->bindValue(':price', $advertEntity->getPrice(), PDO::PARAM_INT);
         $addAdvert->bindValue(':category_id', $advertEntity->getCategory_id(), PDO::PARAM_INT);
+        $addAdvert->bindValue(':picture', $advertEntity->getPicture(), PDO::PARAM_STR);
         // $addAdvert->bindValue(':created_at', $advertEntity->getCreated_at(), PDO::PARAM_STR);
 
         $addAdvert->execute();
 
-        return $addAdvert->rowCount();
+        return( $bdd->lastInsertId() );
     }
 
     /** 
@@ -76,6 +78,7 @@ class AdvertManager extends DataBase
                     {$this->advert}.postcode, 
                     {$this->advert}.city, 
                     {$this->advert}.price, 
+                    {$this->advert}.picture, 
                     {$this->category}.value AS {$this->category}, 
                     DATE_FORMAT({$this->advert}.created_at, '%d/%m/%Y') AS created_at	  
 	                    FROM {$this->advert} 
@@ -97,6 +100,7 @@ class AdvertManager extends DataBase
                                 {$this->advert}.postcode, 
                                 {$this->advert}.city, 
                                 {$this->advert}.price, 
+                                {$this->advert}.picture, 
                                 category.value AS category, 
                                 DATE_FORMAT({$this->advert}.created_at, '%d/%m/%Y') AS created_at 
 	                                FROM {$this->advert} 
@@ -146,7 +150,29 @@ class AdvertManager extends DataBase
         // On execute la requète
         $update_advert->execute();
         $update_advert->closeCursor();
-        return ($update_advert->rowCount());
+        return $update_advert->rowCount();
+    }
+
+    public function updateAdvertById($id, AdvertEntity $advert, $image)
+    {
+        // Préparation de la requète SQL
+        $update_advert = $this->getPDO()->prepare(
+            "UPDATE `{$this->advert}` SET `title` = :title, `description` = :description, `postcode` = :postcode, `city`= :city, `price` = :price, `category_id` = :category_id, `picture`= :picture WHERE `id_advert` = :id;"
+        );
+        // On associe les différentes variables aux marqueurs en respectant les types
+        $update_advert->bindValue(':id', $id, PDO::PARAM_INT);
+        $update_advert->bindValue(':title', $advert->getTitle(), PDO::PARAM_STR);
+        $update_advert->bindValue(':description', $advert->getDescription(), PDO::PARAM_STR);
+        $update_advert->bindValue(':postcode', $advert->getPostcode(), PDO::PARAM_INT);
+        $update_advert->bindValue(':city', $advert->getCity(), PDO::PARAM_STR);
+        $update_advert->bindValue(':price', $advert->getPrice(), PDO::PARAM_INT);
+        // $update_advert->bindValue(':reservation_message', $advert->getReservation_message(), PDO::PARAM_STR);
+        $update_advert->bindValue(':picture', $image, PDO::PARAM_STR);
+        $update_advert->bindValue(':category_id', $advert->getCategory_id(), PDO::PARAM_INT);
+        // On execute la requète
+        $update_advert->execute();
+        $update_advert->closeCursor();
+        return $update_advert->rowCount();  
     }
 
     /**
