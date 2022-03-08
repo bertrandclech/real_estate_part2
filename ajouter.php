@@ -12,6 +12,8 @@ if (!Authentification::isAuth()) {
 	Utilis::redirect("./user/connexion.php");
 }
 
+require_once './src/fonctions.php';          # fonctions pour ajout d'images
+
 // Manager Advert
 $adManager = new AdvertManager();
 
@@ -32,22 +34,45 @@ $formValidator = new FormValidator(
 );
 
 if ($formValidator->isSubmit()) {
+
+
 	if ($formValidator->isValide()) {
 
 		// If Form is valide insert datas in entity
-		$advertEntity = new AdvertEntity(
+		$ad = new AdvertEntity(
 			[
 				'title' => htmlspecialchars($formBuilder->method['title']),
 				'description' => htmlspecialchars($formBuilder->method['description']),
 				'postcode' => htmlspecialchars($formBuilder->method['postcode']),
 				'city' => htmlspecialchars($formBuilder->method['city']),
 				'category_id' => htmlspecialchars($formBuilder->method['category']),
-				'price' => htmlspecialchars($formBuilder->method['price'])
+				'price' => htmlspecialchars($formBuilder->method['price']),
+				'picture' => 'image.png',
 			]
 		);
 		// Add advert (INSERT INTO DB)
 		$adManager->addAdvert($advertEntity);
 		Utilis::flash("message", ["Informations enregistrées."]);
+		$lastId = $adManager->addAdvert($ad);
+
+		// Vérifie les caractéristiques de l'image
+
+		//var_dump($lastId);	
+
+		$extension = verifPicture($_FILES['picture']);
+		if ($extension) {
+		// Sauvegarde de l'image
+		// Upload de l'image
+			$nom_image = uploadImage($_FILES['picture'], $lastId, $extension);
+
+		// Met à jour le nom de l'image en BDD
+			$ad->setPicture($nom_image);
+			$adManager->updateAdvertById($lastId,  $ad	, $nom_image);
+		} else {
+			$_SESSION['message'] = ["<div class='alert alert-danger' role='alert'>Image invalide !</div>"];
+		}	
+
+		$_SESSION['message'] = ["Informations enregistrées."];
 	} else {
 		# Errors...
 		Utilis::flash("message", $formValidator->errors);
@@ -65,11 +90,11 @@ require_once './templates/header.php'; ?>
 
 <div class="container-fluid">
 
-	<form method="post" class="mt-5" novalidate>
+	<form method="post" class="mt-5" enctype="multipart/form-data"> <!-- novalidate -->
 
 		<div class="form-group">
 			<label>Titre</label>
-			<input type="text" class="form-control" name="title">
+			<input type="text" class="form-control" name="title">	
 		</div>
 
 		<div class="form-group">
@@ -105,6 +130,14 @@ require_once './templates/header.php'; ?>
 				</div>
 			</div>
 		</div>
+
+		<div class="form-group">
+			<label>Photo</label>
+			<div class="custom-file">
+				<input type="file" class="custom-file-input" name="picture">
+				<label class="custom-file-label">Choisir une photo</label>
+			</div>
+		</div>	
 
 		<a href="index.php" class="btn btn-outline-secondary">Annuler</a>
 		<input type="submit" class="btn btn-primary" name="submit" value="Valider">

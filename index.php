@@ -21,6 +21,7 @@ require_once './templates/header.php';
 <table class="table table-striped mt-5">
     <thead>
         <tr>
+            <th>Photo</th>
             <th>Titre</th>
             <th>Description</th>
             <th>Code postal</th>
@@ -34,6 +35,7 @@ require_once './templates/header.php';
 
         <?php foreach ($lastAdvert as $advert) : ?>
             <tr>
+                <td><img src="<?php echo "uploads/".$advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid"></td> 
                 <td><?= mb_strtoupper($advert['title']); ?></td>
                 <td><?= ucfirst(substr($advert['description'], 0, 10) . "..."); ?></td>
                 <td><?= $advert['postcode']; ?></td>

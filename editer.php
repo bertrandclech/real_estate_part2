@@ -3,11 +3,14 @@
 // Autoload
 require_once './src/autoload.php';
 
+
 // If not auth
 if (!Authentification::isAuth()) {
 	Utilis::flash("message", ["Vous devez être connectée."]);
 	Utilis::redirect("./user/connexion.php");
 }
+
+require_once './src/fonctions.php';          # fonctions pour ajout d'images
 
 # Instance of advertMananger
 $adManager = new AdvertManager();
@@ -38,29 +41,43 @@ $formValidator = new FormValidator(
 // If form is submit
 if ($formValidator->isSubmit()) {
 	if ($formValidator->isValide()) {
-		// Build a entity
-		$advertEntity = new AdvertEntity(
-			[
-				'id_avert' => htmlspecialchars((int) $_GET['id']),
-				'title' => htmlspecialchars($formBuilder->method['title']),
-				'description' => htmlspecialchars($formBuilder->method['description']),
-				'postcode' => htmlspecialchars($formBuilder->method['postcode']),
-				'city' => htmlspecialchars($formBuilder->method['city']),
-				'category_id' => htmlspecialchars($formBuilder->method['category']),
-				'price' => htmlspecialchars($formBuilder->method['price'])
-			]
-		);
 
-		// Update Advert into database
-		if ($adManager->updateAdvertFromArray($advertEntity) > 0) {
-			Utilis::flash('message', ["Annonce modifié avec success."]);
-		} else {
-			Utilis::flash('message', ["L'annonce a pas été modifié."]);
+		// Si une image est envoyée, effectuer les vérifications nécessaires
+		if (!empty($_FILES['picture']['name'])) {
+
+			$extension = verifPicture($_FILES['picture']);
+
+			// Si pas d'erreur dans la vérification de l'image, on upload
+			if ($extension) {
+				// Upload de l'image
+				$nom_photo = uploadImage($_FILES['picture'], $_GET['id'], $extension);
+
+				// Build a entity
+				$ad = new AdvertEntity(
+					[
+						'id_avert' => htmlspecialchars((int) $_GET['id']),
+						'title' => htmlspecialchars($formBuilder->method['title']),
+						'description' => htmlspecialchars($formBuilder->method['description']),
+						'postcode' => htmlspecialchars($formBuilder->method['postcode']),
+						'city' => htmlspecialchars($formBuilder->method['city']),
+						'category_id' => htmlspecialchars($formBuilder->method['category']),
+						'price' => htmlspecialchars($formBuilder->method['price']),
+						'picture' => htmlspecialchars($nom_photo)
+					]
+				);
+						// Update Advert into database
+				if ($adManager->updateAdvertById(intval($_GET['id']), $ad, $nom_photo) > 0) {
+					$_SESSION['message'] = ["Annonce modifié avec success."];
+				} else {
+					$_SESSION['message'] = ["L'annonce a pas été modifié."];
+				}
+				header('Location: editer.php?id=' . (int) $_GET['id'] . '');
+				exit();
+			}
+			else {
+				$_SESSION['messsage'] =	 '<div class="alert alert-danger" role="alert">Image invalide !</div>';
+			}
 		}
-		
-		// Redirection
-		header('Location: editer.php?id=' . (int) $_GET['id'] . '');
-		exit();
 	} else {
 		Utilis::flash('message', $formValidator->errors);
 	}
@@ -119,7 +136,17 @@ require_once './templates/header.php';
 					<div class="input-group-text">€</div>
 				</div>
 			</div>
+		</div>	
+
+		<div class="form-group">
+			<label>Photo</label>
+			<div class="custom-file">
+				<input type="hidden" name="old_picture" value="<?php echo $advert['picture']; ?>">	
+				<input type="file" class="custom-file-input" name="picture">
+				<label class="custom-file-label">Choisir une photo</label>
+			</div>
 		</div>
+
 		<div class="form-group">
 			<input type="hidden" class="form-control" name="reservation_message" value="disponible" />
 		</div>
