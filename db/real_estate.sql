@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le : mar. 08 mars 2022 à 08:53
+-- Généré le : mar. 08 mars 2022 à 09:19
 -- Version du serveur : 8.0.28
 -- Version de PHP : 8.1.2
 
@@ -29,16 +29,16 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `advert` (
   `id_advert` int UNSIGNED NOT NULL,
-  `title` varchar(255) NOT NULL,
-  `description` text NOT NULL,
-  `postcode` varchar(5) NOT NULL,
-  `city` varchar(50) NOT NULL,
+  `title` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `postcode` varchar(5) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `city` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `price` int UNSIGNED NOT NULL,
-  `reservation_message` text,
+  `reservation_message` text CHARACTER SET utf8 COLLATE utf8_general_ci,
   `category_id` int NOT NULL,
   `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `picture` varchar(255) NOT NULL
+  `picture` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -58,7 +58,7 @@ INSERT INTO `advert` (`id_advert`, `title`, `description`, `postcode`, `city`, `
 
 CREATE TABLE `category` (
   `id_category` int NOT NULL,
-  `value` varchar(30) NOT NULL
+  `value` varchar(30) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
@@ -77,7 +77,7 @@ INSERT INTO `category` (`id_category`, `value`) VALUES
 
 CREATE TABLE `user` (
   `id_user` int NOT NULL,
-  `nickname` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `nickname` varchar(150) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `mail` varchar(150) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(250) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `role` int NOT NULL,
