@@ -152,6 +152,7 @@ class AdvertManager extends DataBase
         // On execute la requète
         $update_advert->execute();
         $update_advert->closeCursor();
+
         return $update_advert->rowCount();
     }
 
@@ -175,6 +176,7 @@ class AdvertManager extends DataBase
         // On execute la requète
         $update_advert->execute();
         $update_advert->closeCursor();
+
         return $update_advert->rowCount();  
     }
 
@@ -203,7 +205,8 @@ class AdvertManager extends DataBase
 			   $book->bindValue(':reservation_message', $message, PDO::PARAM_STR);
 			   // On execute la requète
 			   $book->execute();
-			   $book->closeCursor();    
+			   $book->closeCursor();  
+
 			   return( $book->rowCount() );
 	}
 }
