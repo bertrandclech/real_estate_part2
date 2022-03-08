@@ -29,7 +29,7 @@ if ($formValidator->isSubmit()) {
     if ($formValidator->isValide()) {
         // Check if email exist
         if ($userManager->verifyEmailExist($formBuilder->method['email']) === 0) {
-
+            
             // Entity User
             $userEntity = new UserEntity(
                 [
