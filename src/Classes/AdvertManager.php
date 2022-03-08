@@ -22,7 +22,7 @@ class AdvertManager extends DataBase
      */
     public function addAdvert(AdvertEntity $advertEntity): int
     {
-        $bdd = $this->getPDO();
+     //   $bdd = $this->getPDO();
         $addAdvert = $bdd->prepare(
             "INSERT INTO {$this->advert} (title, description, postcode, city, price, picture, category_id)
                 VALUE(:title, :description, :postcode, :city, :price, :picture, :category_id)"
@@ -38,7 +38,7 @@ class AdvertManager extends DataBase
 
         $addAdvert->execute();
 
-        return( $bdd->lastInsertId() );
+        return( $this->db->lastInsertId() );
     }
 
     /** 
@@ -191,10 +191,29 @@ class AdvertManager extends DataBase
         $delete_advert->execute();
         $delete_advert->closeCursor();
 
-        unlink('uploads/'. $this->advert->getPictuure(['image']));
+    //    unlink('uploads/'. $this->advert->getPicture());
 
         return $delete_advert->rowCount();
     }
+
+    /**
+     * Supprime uune annonce
+     *
+     * @param advert $ad
+     * @return boolean
+     */
+    public function deleteAdvert(advertEntity $ad)
+    {
+        $delete_advert = $this->getPDO()->prepare("DELETE FROM {$this->advert} WHERE id_advert = :id");
+        $delete_advert->bindValue(':id', $ad->getId_advert(), PDO::PARAM_INT);
+        $delete_advert->execute();
+        $delete_advert->closeCursor();
+
+        unlink('uploads/'.$ad->getPicture());
+
+        return $delete_advert->rowCount();
+    }
+
 
     public function book($id, $message)
 	{

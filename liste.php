@@ -18,7 +18,11 @@ $advertManager = new AdvertManager();
 // Vérifie si un id est envoyé et si une variable $type est bien envoyée
 if (!empty($_GET['id']) && !empty($_GET['type']) && $_GET['type'] === 'supprimer') {
     // Suppression d'une annonce en BDD
-    $advertManager->deleteAdvertById($_GET['id']);
+    $ad = new AdvertEntity( $advertManager->getAdvertById($_GET['id']) ); 
+    var_dump($ad);
+    //die();  
+
+    $advertManager->deleteAdvert($ad);
 }
 
 // Récupération de toutes les annonces
@@ -69,7 +73,7 @@ require_once './templates/header.php';
                         <a href="details.php?id=<?= $advert['id_advert']; ?>" class="btn btn-warning btn-sm mb-1">Voir le détail</a>
                         <?php if (Authentification::isAdmin()) : ?>
                             <a href="editer.php?id=<?= $advert['id_advert']; ?>" class="btn btn-primary btn-sm mb-1">Mettre à jour</a>
-                            <a onclick="return confirm('Voulez-vous bien supprimer ?');" href="index.php?id=<?= $advert['id_advert']; ?>&type=supprimer" class="btn btn-danger btn-sm">Supprimer</a>
+                            <a onclick="return confirm('Voulez-vous bien supprimer ?');" href="liste.php?id=<?= $advert['id_advert']; ?>&type=supprimer" class="btn btn-danger btn-sm">Supprimer</a>
                         <?php endif; ?>
                     </td>
                 </tr>

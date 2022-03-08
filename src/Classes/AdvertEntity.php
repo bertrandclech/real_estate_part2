@@ -8,7 +8,7 @@ class AdvertEntity
     private string $postcode;
     protected string $city;
     protected int $price;
-    protected string $reservation_message;
+    protected ?string $reservation_message;
     protected int $category_id;
     protected string $picture;
     protected string $created_at;
@@ -23,13 +23,13 @@ class AdvertEntity
         }
     }
 
-    public function getId_avert()
+    public function getId_advert()
     {
-        return $this->id_avert;
+        return $this->id_advert;
     }
-    public function setId_avert($id_avert)
+    public function setId_advert($id_advert)
     {
-        $this->id_avert = $id_avert;
+        $this->id_advert = $id_advert;
         return $this;
     }
 
@@ -88,7 +88,8 @@ class AdvertEntity
     {
         return $this->reservation_message;
     }
-    public function setReservation_message($reservation_message)
+
+    public function setReservation_message(?string $reservation_message)
     {
         $this->reservation_message = $reservation_message;
         return $this;
