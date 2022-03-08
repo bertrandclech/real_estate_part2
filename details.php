@@ -2,6 +2,16 @@
 
 require_once './src/autoload.php';
 
+// Verify session
+if (!Authentification::isAuth()) {
+	// Automatique redirect last page visited
+	$_SESSION['redirect'] = $_SERVER['REQUEST_URI'];
+
+	// Message
+	Utilis::flash("message", ["Vous devez être connecté."]);
+	Utilis::redirect("./user/connexion.php");
+}
+
 $advertManager = new AdvertManager();
 
 // Récupération des information d'une annonce

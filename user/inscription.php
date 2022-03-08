@@ -3,6 +3,11 @@
 // Autoload
 require_once 'autoload.php';
 
+// Authentification
+if (Authentification::isAuth()) {
+    Utilis::redirect("profil.php");
+}
+
 // User Manager
 $userManager = new UserManager();
 
@@ -24,7 +29,7 @@ if ($formValidator->isSubmit()) {
     if ($formValidator->isValide()) {
         // Check if email exist
         if ($userManager->verifyEmailExist($formBuilder->method['email']) === 0) {
-
+            
             // Entity User
             $userEntity = new UserEntity(
                 [
@@ -36,15 +41,15 @@ if ($formValidator->isSubmit()) {
             );
             // Insert user in database
             if ($userManager->addUser($userEntity)) {
-                $_SESSION['message'] = ["Success enregistrement."];
+                Utilis::flash('message', ["Success enregistrement."]);
             } else {
-                $_SESSION['message'] = ["Erreur pendant l'enregistrement."];
+                Utilis::flash('message', ["Erreur pendant l'enregistrement."]);
             }
-        }else{
-            $_SESSION['message'] = ["Email déjà existante."];
+        } else {
+            Utilis::flash('message', ["Email déjà existante."]);
         }
     } else {
-        $_SESSION['message'] = $formValidator->errors;
+        Utilis::flash('message', $formValidator->errors);
     }
 }
 

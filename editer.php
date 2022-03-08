@@ -3,6 +3,13 @@
 // Autoload
 require_once './src/autoload.php';
 
+
+// If not auth
+if (!Authentification::isAuth()) {
+	Utilis::flash("message", ["Vous devez être connectée."]);
+	Utilis::redirect("./user/connexion.php");
+}
+
 require_once './src/fonctions.php';          # fonctions pour ajout d'images
 
 # Instance of advertMananger
@@ -34,7 +41,6 @@ $formValidator = new FormValidator(
 // If form is submit
 if ($formValidator->isSubmit()) {
 	if ($formValidator->isValide()) {
-
 
 		// Si une image est envoyée, effectuer les vérifications nécessaires
 		if (!empty($_FILES['picture']['name'])) {
@@ -73,7 +79,7 @@ if ($formValidator->isSubmit()) {
 			}
 		}
 	} else {
-		$_SESSION['message'] = $formValidator->errors;
+		Utilis::flash('message', $formValidator->errors);
 	}
 }
 

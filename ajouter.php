@@ -2,6 +2,16 @@
 
 require_once './src/autoload.php';			# Autoload
 
+// Verify session
+if (!Authentification::isAuth()) {
+	// Automatique redirect last page visited
+	$_SESSION['redirect'] = $_SERVER['REQUEST_URI'];
+
+	// Message
+	Utilis::flash("message", ["Vous devez être connecté."]);
+	Utilis::redirect("./user/connexion.php");
+}
+
 require_once './src/fonctions.php';          # fonctions pour ajout d'images
 
 // Manager Advert
@@ -27,7 +37,7 @@ if ($formValidator->isSubmit()) {
 
 
 	if ($formValidator->isValide()) {
-		
+
 		// If Form is valide insert datas in entity
 		$ad = new AdvertEntity(
 			[
@@ -41,6 +51,8 @@ if ($formValidator->isSubmit()) {
 			]
 		);
 		// Add advert (INSERT INTO DB)
+		$adManager->addAdvert($advertEntity);
+		Utilis::flash("message", ["Informations enregistrées."]);
 		$lastId = $adManager->addAdvert($ad);
 
 		// Vérifie les caractéristiques de l'image
@@ -63,12 +75,12 @@ if ($formValidator->isSubmit()) {
 		$_SESSION['message'] = ["Informations enregistrées."];
 	} else {
 		# Errors...
-		$_SESSION['message'] = $formValidator->errors;
+		Utilis::flash("message", $formValidator->errors);
 	}
 }
 
 // Ttile
-$title = "Ajouter une annonce";	
+$title = "Ajouter une annonce";
 // Navbar
 $navbar = "navbar";
 // Header
@@ -99,7 +111,7 @@ require_once './templates/header.php'; ?>
 			<label>Ville</label>
 			<input type="text" class="form-control" name="city">
 		</div>
-		
+
 		<div class="form-group">
 			<label>Type</label>
 			<select name="category" class="custom-select">

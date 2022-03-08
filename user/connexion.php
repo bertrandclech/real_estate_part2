@@ -3,6 +3,11 @@
 // Autoload
 require_once 'autoload.php';
 
+// Authentification
+if (Authentification::isAuth()) {
+    Utilis::redirect("profil.php");
+}
+
 // Instance User Manager
 $userManager = new UserManager();
 
@@ -12,7 +17,7 @@ $formBuilder = new FormBuilder($_POST, ['email', 'password']);
 $formValidator = new FormValidator(
     $formBuilder,
     [
-        'email' => FormConstraints::string(@$formBuilder->method['email']),
+        'email' => FormConstraints::email(@$formBuilder->method['email']),
         'password' => FormConstraints::string(@$formBuilder->method['password']),
     ]
 );
@@ -34,17 +39,23 @@ if ($formValidator->isSubmit()) {
                         'date' => $auth['created_at']
                     ];
 
+                if (isset($_SESSION['redirect'])) {
+                    Utilis::redirect($_SESSION['redirect']);
+                    unset($_SESSION['redirect']);
+                }
+
+                Utilis::flash('message', ["Connecté"]);
                 header('Location: profil.php');
                 exit();
             } else {
-                $_SESSION['message'] = ['Informations invalides.'];
+                Utilis::flash('message', ['Informations invalides.']);
             }
         } else {
-            $_SESSION['message'] = ['Informations invalides.'];
+            Utilis::flash('message', ['Informations invalides.']);
         }
     } else {
         // Return errors
-        $_SESSION['message'] = $formValidator->errors;
+        Utilis::flash('message', $formValidator->errors);
     }
 }
 

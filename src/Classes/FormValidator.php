@@ -5,31 +5,29 @@ require_once 'FormConstraints.php';
 /**
  * Class Form Validator
  * 
- * A basic example
- * 
- * 2. Validate Form
- * $formValidator = 
- * new FormValidator(
- *      $formBuilder, 
- *          [
- *              'firstName' => FormConstraints::controllLength(@$formBuilder->method['firstName'], 2, 5),
- *              'age' => FormConstraints::controllInt(@$formBuilder->method['age'])
- *          ]);
- * 
- *  if($formValidator->isSubmit()){
- *      if($formValidator->isValide()){
- *           // More logic here ...
- * 
- *  }else{
- *      // Return errors
- *      $errors = $formValidator->errors;
- *  }
- * }
- * 
  * @author Guillaume RGD <devweb@guillaumerigourd.fr>
  * [Created : 04.03.2022]
  * [Update  : 06.03.2022]
  */
+
+// A basic example
+// 2. Validate Form
+// $formValidator = 
+// new FormValidator(
+//      $formBuilder, 
+//          [
+//              'firstName' => FormConstraints::controllLength(@$formBuilder->method['firstName'], 2, 5),
+//              'age' => FormConstraints::controllInt(@$formBuilder->method['age'])
+//          ]);
+//  if($formValidator->isSubmit()){
+//      if($formValidator->isValide()){
+//           // More logic here ...
+//  }else{
+//      // Return errors
+//      $errors = $formValidator->errors;
+//  }
+// }
+
 class FormValidator extends FormConstraints
 {
     public function __construct(FormBuilder $formBuilder, array $constraints)
