@@ -41,15 +41,15 @@ if ($formValidator->isSubmit()) {
             );
             // Insert user in database
             if ($userManager->addUser($userEntity)) {
-                $_SESSION['message'] = ["Success enregistrement."];
+                Utilis::flash('message', ["Success enregistrement."]);
             } else {
-                $_SESSION['message'] = ["Erreur pendant l'enregistrement."];
+                Utilis::flash('message', ["Erreur pendant l'enregistrement."]);
             }
         } else {
-            $_SESSION['message'] = ["Email déjà existante."];
+            Utilis::flash('message', ["Email déjà existante."]);
         }
     } else {
-        $_SESSION['message'] = $formValidator->errors;
+        Utilis::flash('message', $formValidator->errors);
     }
 }
 

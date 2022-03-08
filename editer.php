@@ -4,7 +4,7 @@
 require_once './src/autoload.php';
 
 // If not auth
-if(!Authentification::isAuth()){
+if (!Authentification::isAuth()) {
 	Utilis::flash("message", ["Vous devez être connectée."]);
 	Utilis::redirect("./user/connexion.php");
 }
@@ -53,14 +53,16 @@ if ($formValidator->isSubmit()) {
 
 		// Update Advert into database
 		if ($adManager->updateAdvertFromArray($advertEntity) > 0) {
-			$_SESSION['message'] = ["Annonce modifié avec success."];
+			Utilis::flash('message', ["Annonce modifié avec success."]);
 		} else {
-			$_SESSION['message'] = ["L'annonce a pas été modifié."];
+			Utilis::flash('message', ["L'annonce a pas été modifié."]);
 		}
+		
+		// Redirection
 		header('Location: editer.php?id=' . (int) $_GET['id'] . '');
 		exit();
 	} else {
-		$_SESSION['message'] = $formValidator->errors;
+		Utilis::flash('message', $formValidator->errors);
 	}
 }
 

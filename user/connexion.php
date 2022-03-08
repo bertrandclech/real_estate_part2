@@ -44,18 +44,18 @@ if ($formValidator->isSubmit()) {
                     unset($_SESSION['redirect']);
                 }
 
-                $_SESSION['message'] = ["Connecté"];
+                Utilis::flash('message', ["Connecté"]);
                 header('Location: profil.php');
                 exit();
             } else {
-                $_SESSION['message'] = ['Informations invalides.'];
+                Utilis::flash('message', ['Informations invalides.']);
             }
         } else {
-            $_SESSION['message'] = ['Informations invalides.'];
+            Utilis::flash('message', ['Informations invalides.']);
         }
     } else {
         // Return errors
-        $_SESSION['message'] = $formValidator->errors;
+        Utilis::flash('message', $formValidator->errors);
     }
 }
 
