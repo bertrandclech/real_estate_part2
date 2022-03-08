@@ -209,7 +209,7 @@ class AdvertManager extends DataBase
         $delete_advert->execute();
         $delete_advert->closeCursor();
 
-        unlink('uploads/'.$ad->getPicture());
+        if ( filexists('uploads/'.$ad->getPicture()) ) { unlink('uploads/'.$ad->getPicture()); }
 
         return $delete_advert->rowCount();
     }
