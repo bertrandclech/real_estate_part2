@@ -10,6 +10,7 @@ class AdvertEntity
     protected int $price;
     protected string $reservation_message;
     protected int $category_id;
+    protected string $picture;
     protected string $created_at;
 
     public function __construct(array $datas)
@@ -102,6 +103,17 @@ class AdvertEntity
         $this->category_id = $category_id;
         return $this;
     }
+
+    public function getPicture()
+    {
+        return $this->picture;
+    }
+    public function setPicture($picture)
+    {
+        $this->picture = $picture;
+        return $this;
+    }
+
 
     public function getCreated_at()
     {

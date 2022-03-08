@@ -35,7 +35,7 @@ require_once './templates/header.php';
 
         <?php foreach ($lastAdvert as $advert) : ?>
             <tr>
-                <td><img src="images/<?php echo $advert['picture'] ?>" alt="<?php echo $advert['title'] ?>" class="img-fluid"></td> 
+                <td><img src="<?php echo "uploads/".$advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid"></td> 
                 <td><?= mb_strtoupper($advert['title']); ?></td>
                 <td><?= ucfirst(substr($advert['description'], 0, 10) . "..."); ?></td>
                 <td><?= $advert['postcode']; ?></td>
