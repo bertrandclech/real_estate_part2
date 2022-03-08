@@ -46,6 +46,7 @@ require_once './templates/header.php';
                 <th>Catégorie</th>
                 <th>Prix</th>
                 <th>Date de création</th>
+                <th>Date de maj</th>
 
                 <th class="text-right">Actions</th>
             </tr>
@@ -62,6 +63,7 @@ require_once './templates/header.php';
                     <td><?= $advert['category']; ?></td>
                     <td><?= $advert['price']; ?> €</td>
                     <td><?= $advert['created_at']; ?></td>
+                    <td><?= $advert['updated_at']; ?></td>
 
                     <td class="text-right">
                         <a href="details.php?id=<?= $advert['id_advert']; ?>" class="btn btn-warning btn-sm mb-1">Voir le détail</a>

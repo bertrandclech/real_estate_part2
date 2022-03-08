@@ -29,6 +29,7 @@ require_once './templates/header.php';
             <th>Catégorie</th>
             <th>Prix</th>
             <th>Date de création</th>
+            <th>Date de maj</th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +44,7 @@ require_once './templates/header.php';
                 <td><?= $advert['category']; ?></td>
                 <td><?= $advert['price']; ?> €</td>
                 <td><?= $advert['created_at']; ?></td>
+                <td><?= $advert['updated_at']; ?></td>
             </tr>
         <?php endforeach; ?>
 

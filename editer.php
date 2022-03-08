@@ -42,6 +42,21 @@ $formValidator = new FormValidator(
 if ($formValidator->isSubmit()) {
 	if ($formValidator->isValide()) {
 
+
+		// Build a entity
+		$ad = new AdvertEntity(
+			[
+				'id_avert' => htmlspecialchars((int) $_GET['id']),
+				'title' => htmlspecialchars($formBuilder->method['title']),
+				'description' => htmlspecialchars($formBuilder->method['description']),
+				'postcode' => htmlspecialchars($formBuilder->method['postcode']),
+				'city' => htmlspecialchars($formBuilder->method['city']),
+				'category_id' => htmlspecialchars($formBuilder->method['category']),
+				'price' => htmlspecialchars($formBuilder->method['price']),
+				
+			]
+		);
+
 		// Si une image est envoyée, effectuer les vérifications nécessaires
 		if (!empty($_FILES['picture']['name'])) {
 
@@ -52,20 +67,10 @@ if ($formValidator->isSubmit()) {
 				// Upload de l'image
 				$nom_photo = uploadImage($_FILES['picture'], $_GET['id'], $extension);
 
-				// Build a entity
-				$ad = new AdvertEntity(
-					[
-						'id_avert' => htmlspecialchars((int) $_GET['id']),
-						'title' => htmlspecialchars($formBuilder->method['title']),
-						'description' => htmlspecialchars($formBuilder->method['description']),
-						'postcode' => htmlspecialchars($formBuilder->method['postcode']),
-						'city' => htmlspecialchars($formBuilder->method['city']),
-						'category_id' => htmlspecialchars($formBuilder->method['category']),
-						'price' => htmlspecialchars($formBuilder->method['price']),
-						'picture' => htmlspecialchars($nom_photo)
-					]
-				);
-				// Update Advert into database
+				// set de l'image
+				$ad->setPicture(htmlspecialchars($nom_photo));
+
+						// Update Advert into database
 				if ($adManager->updateAdvertById(intval($_GET['id']), $ad, $nom_photo) > 0) {
 					Utilis::flash('message', ["Annonce modifié avec success."]);
 				} else {
@@ -77,6 +82,16 @@ if ($formValidator->isSubmit()) {
 			} else {
 				$_SESSION['messsage'] =	 '<div class="alert alert-danger" role="alert">Image invalide !</div>';
 			}
+		// on met à jour tout sauf l'image	
+		} else {
+			if ($adManager->updateAdvert($ad) > 0) {
+				$_SESSION['message'] = ["Annonce modifié avec success."];
+			} else {
+				$_SESSION['message'] = ["L'annonce a pas été modifié."];
+			}
+			header('Location: editer.php?id=' . (int) $_GET['id'] . '');
+			exit();
+
 		}
 	} else {
 		Utilis::flash('message', $formValidator->errors);
@@ -140,6 +155,7 @@ require_once './templates/header.php';
 
 		<div class="form-group">
 			<label>Photo</label>
+			<img src="uploads/<?php echo $advert['picture']; ?>" alt="<?php echo $advert['title']; ?>" class="img-fluid">
 			<div class="custom-file">
 				<input type="hidden" name="old_picture" value="<?php echo $advert['picture']; ?>">
 				<input type="file" class="custom-file-input" name="picture">

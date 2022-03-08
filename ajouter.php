@@ -34,8 +34,6 @@ $formValidator = new FormValidator(
 );
 
 if ($formValidator->isSubmit()) {
-
-
 	if ($formValidator->isValide()) {
 
 		// If Form is valide insert datas in entity
@@ -51,7 +49,8 @@ if ($formValidator->isSubmit()) {
 			]
 		);
 		// Add advert (INSERT INTO DB)
-		$adManager->addAdvert($ad);
+
+		//$adManager->addAdvert($ad);
 		Utilis::flash("message", ["Informations enregistrées."]);
 		$lastId = $adManager->addAdvert($ad);
 

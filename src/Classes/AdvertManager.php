@@ -80,7 +80,8 @@ class AdvertManager extends DataBase
                     {$this->advert}.price, 
                     {$this->advert}.picture, 
                     {$this->category}.value AS {$this->category}, 
-                    DATE_FORMAT({$this->advert}.created_at, '%d/%m/%Y') AS created_at	  
+                    DATE_FORMAT({$this->advert}.created_at, '%d/%m/%Y') AS created_at,
+                    DATE_FORMAT({$this->advert}.updated_at, '%d/%m/%Y-%H:%i') AS updated_at 	  
 	                    FROM {$this->advert} 
                             INNER JOIN {$this->category} WHERE {$this->category}.id_{$this->category} = {$this->advert}.{$this->category}_id
 	                            ORDER BY advert.created_at DESC LIMIT 15"
@@ -102,7 +103,8 @@ class AdvertManager extends DataBase
                                 {$this->advert}.price, 
                                 {$this->advert}.picture, 
                                 category.value AS category, 
-                                DATE_FORMAT({$this->advert}.created_at, '%d/%m/%Y') AS created_at 
+                                DATE_FORMAT({$this->advert}.created_at, '%d/%m/%Y') AS created_at, 
+                                DATE_FORMAT({$this->advert}.updated_at, '%d/%m/%Y-%H:%i') AS updated_at 
 	                                FROM {$this->advert} 
                                         INNER JOIN category WHERE category.id_category = {$this->advert}.category_id"
         )->fetchAll(PDO::FETCH_ASSOC);
@@ -132,7 +134,7 @@ class AdvertManager extends DataBase
      * @return int
      */
     // Update a  guitar in the bdd and returns the status
-    public function updateAdvertFromArray(AdvertEntity $advert)
+    public function updateAdvert(AdvertEntity $advert)
     {
         // Préparation de la requète SQL
         $update_advert = $this->getPDO()->prepare(
@@ -157,7 +159,7 @@ class AdvertManager extends DataBase
     {
         // Préparation de la requète SQL
         $update_advert = $this->getPDO()->prepare(
-            "UPDATE `{$this->advert}` SET `title` = :title, `description` = :description, `postcode` = :postcode, `city`= :city, `price` = :price, `category_id` = :category_id, `picture`= :picture WHERE `id_advert` = :id;"
+            "UPDATE `{$this->advert}` SET `title` = :title, `description` = :description, `postcode` = :postcode, `city`= :city, `price` = :price, `category_id` = :category_id, `picture`= :picture, `updated_at` = :updated_at WHERE `id_advert` = :id;"
         );
         // On associe les différentes variables aux marqueurs en respectant les types
         $update_advert->bindValue(':id', $id, PDO::PARAM_INT);
@@ -169,6 +171,7 @@ class AdvertManager extends DataBase
         // $update_advert->bindValue(':reservation_message', $advert->getReservation_message(), PDO::PARAM_STR);
         $update_advert->bindValue(':picture', $image, PDO::PARAM_STR);
         $update_advert->bindValue(':category_id', $advert->getCategory_id(), PDO::PARAM_INT);
+        $update_advert->bindValue(':updated_at', date_create('now')->format('Y-m-d H:i:s'), PDO::PARAM_STR);
         // On execute la requète
         $update_advert->execute();
         $update_advert->closeCursor();
